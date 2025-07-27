@@ -9,28 +9,6 @@ endif
 TOPDIR ?= $(CURDIR)
 include $(DEVKITARM)/3ds_rules
 
-#---------------------------------------------------------------------------------
-# TARGET is the name of the output
-# BUILD is the directory where object files & intermediate files will be placed
-# SOURCES is a list of directories containing source code
-# DATA is a list of directories containing data files
-# INCLUDES is a list of directories containing header files
-# GRAPHICS is a list of directories containing graphics files
-# GFXBUILD is the directory where converted graphics files will be placed
-#   If set to $(BUILD), it will statically link in the converted
-#   files as if they were data files.
-#
-# NO_SMDH: if set to anything, no SMDH file is generated.
-# ROMFS is the directory which contains the RomFS, relative to the Makefile (Optional)
-# APP_TITLE is the name of the app stored in the SMDH file (Optional)
-# APP_DESCRIPTION is the description of the app stored in the SMDH file (Optional)
-# APP_AUTHOR is the author of the app stored in the SMDH file (Optional)
-# ICON is the filename of the icon (.png), relative to the project folder.
-#   If not set, it attempts to use one of the following (in this order):
-#     - <Project name>.png
-#     - icon.png
-#     - <libctru folder>/default_icon.png
-#---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SYS			:= 3
@@ -63,30 +41,23 @@ LIBS	:= -lctru -lm
 
 TITLE = DDDS
 UNIQUE_ID = 0xF001
-#TITLE_ID = 0004013000F00102
 PRODUCT_CODE = DDDSVR
 ID = *$(TITLE_ID)
 #ICON = icon.png
 ICON := $(TARGET).smdh   # path to SMDH produced in the build directory
-#RSF = DDDS.rsf
 
-APP_TITLE       := DynDNS Updater
+APP_TITLE       := DDDS
 APP_DESCRIPTION := DynDNS Server Updater for 3DS
 APP_AUTHOR      := LeTak
 
 ICON_PNG        := icon.png          # 48×48 image you supply
 SMDH            := $(OUTPUT).smdh    # will become DDDS.smdh
 #---------------------------------------------------------------------------------
-# list of directories containing libraries, this must be the top level containing
-# include and lib
-#---------------------------------------------------------------------------------
+
 LIBDIRS	:= $(CTRULIB) $(PORTLIBS)
 
+#---------------------------------------------------------------------------------
 
-#---------------------------------------------------------------------------------
-# no real need to edit anything past this point unless you need to add additional
-# rules for different file extensions
-#---------------------------------------------------------------------------------
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
@@ -253,19 +224,5 @@ $(OUTPUT).elf	:	$(OFILES)
 
 -include $(DEPSDIR)/*.d
 
-#---------------------------------------------------------------------------------------
 endif
-#---------------------------------------------------------------------------------------
 
-#---------------------------------------------------------------------------------
-# CIA/CCI/NCCH targets
-#---------------------------------------------------------------------------------
-# Ensure all sources are built before packaging.  The "all" target
-# calls $(MAKE) in the build directory and produces $(OUTPUT).elf.
-#cia: all
-#	@makerom -f cia -o $(TARGET).cia -elf $(OUTPUT).elf -rsf $(RSF) -target t -icon $(ICON)
-#	@echo 'CIA wurde erstellt: $(TARGET).cia'
-#
-#cxi: all
-#	@makerom -f cxi -o $(TARGET).cxi -elf $(OUTPUT).elf -rsf $(RSF) -target t -exefslogo
-#	@echo 'CXI wurde erstellt: $(TARGET).cxi'
