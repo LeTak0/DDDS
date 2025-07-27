@@ -1,14 +1,11 @@
-#include <stdlib.h>   // for atoi
+#include <stdlib.h>
 #include <3ds.h>
-//#include <3ds/services/httpc.h>
-//#include <3ds/services/fs.h>
-//#include <3ds/services/ndm.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
-static int update_interval_sec = 300;   // default 5 min
+static int update_interval_sec = 300;   // default 5min
 #define CONFIG_FILENAME "config.txt"
 
 //Dynamic DNS Entry structure
@@ -50,7 +47,7 @@ static const ProvInfo* findProvider(const char *name) {
 // Run the update for each entry
 // If the provider is unknown, log it to error.log
 void run_entries(void) {
-    FILE *elog = fopen("sdmc:/3ds/ddds/error.log", "a");
+    FILE *elog = fopen("ddds.log", "a");
     for (int i = 0; i < entry_count; i++) {
         const ProvInfo *pi = findProvider(entries[i].provider);
         if (!pi) {
@@ -117,6 +114,16 @@ int main(int argc, char** argv) {
     NDMU_EnterExclusiveState(NDM_EXCLUSIVE_STATE_INFRASTRUCTURE); // Enter exclusive state for Wi‑Fi
     FILE* file = fopen(CONFIG_FILENAME, "r");   // open relative to current dir
     if (!file) {
+        FILE *elog = fopen("ddds.log", "a");
+        if (elog) {
+            time_t now = time(NULL);
+            struct tm tm_now;
+            gmtime_r(&now, &tm_now);
+            char ts[20];
+            strftime(ts, sizeof(ts), "%Y-%m-%d %H:%M:%S", &tm_now);
+            fprintf(elog, "%s - Could not find %s\n", ts, CONFIG_FILENAME);
+            fclose(elog);
+        }
         printf("Could not find %s.\n", CONFIG_FILENAME);
         printf("Place it next to DDDS.3dsx.\n");
         waitForA();
