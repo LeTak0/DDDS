@@ -83,7 +83,7 @@ The Makefile only builds a .3dsx and .smdh
 
 ## **License**
 
-Icon : https://pm1.aminoapps.com/7002/c4eab93512a101ef0dcc794c72276487a7e8ae4ar1-1440-798v2_hq.jpg
+Icon : https://www.smashbros.com/wiiu-3ds/images/character/dedede/screen-4.jpg
   
 
 MIT – use it, fork it, ship it.  Credits to the devkitPro & libctru teams for the 3DS homebrew toolchain. 
